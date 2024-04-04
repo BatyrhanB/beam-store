@@ -6,12 +6,12 @@ services:
     tty: true
     build: ..
     volumes:
-      - ../../store-backend:/opt/services/store-backend/
+      - ../../beam-store:/opt/services/store-backend/
       - ../back_static:/opt/services/store-backend/back_static/
       - ../back_media:/opt/services/store-backend/back_media/
     entrypoint: "sh /opt/services/store-backend/scripts/wsgi_server.sh"
     ports:
-      - "8000:8000"
+      - "7777:7777"
     networks:
       - main-network
       - nginx-network
