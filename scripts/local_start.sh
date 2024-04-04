@@ -2,7 +2,7 @@
 WARNING_MESSAGE="Процесс пошел, ничего не трогай!"
 CODE_DIR="../"
 
-echo "Ооо, ты попал в TBM Music."
+echo "Ооо, ты попал в Beam Store."
 echo 
 echo "Добро пожаловать!"
 echo
