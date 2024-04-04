@@ -8,5 +8,5 @@ ADD . /opt/services/store-backend/
 
 RUN chmod 755 /opt/services/store-backend/scripts/* && \
         chmod +x /opt/services/store-backend/scripts/* && \
-            export DJANGO_SETTINGS_MODULE=store.settings && \
+            export DJANGO_SETTINGS_MODULE=config.settings && \
                 pip install -r requirements.txt 
