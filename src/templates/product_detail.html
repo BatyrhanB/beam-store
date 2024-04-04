@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail</title>
+</head>
+<body>
+    <h1>Product Detail</h1>
+    <div id="product-detail">
+    </div>
+
+    <button id="edit-button" onclick="editProduct()">Изменить</button>
+    <button id="delete-button" onclick="deleteProduct()">Удалить</button>
+    <button id="save-button" style="display:none;" onclick="saveChanges()">Сохранить изменения</button>
+    <button id="cancel-button" style="display:none;" onclick="cancelEdit()">Отменить</button>
+
+    <script>
+        function getUrlParam(paramName) {
+            const path = window.location.pathname;
+            const pathParts = path.split('/');
+            const pkIndex = pathParts.indexOf('product_detail') + 1;
+            return pathParts[pkIndex];
+        }
+
+        const productId = getUrlParam('pk');
+
+        const apiUrl = `/api/v1/product/detail/${productId}/`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const productDetail = document.getElementById('product-detail');
+                const product = data;
+                const productInfo = `
+                    <p><strong>Title:</strong> <span id="title">${product.title}</span><input id="product-title-input" value="${product.title}" style="display:none"></p>
+                    <p><strong>Category:</strong> <span id="category">${product.category.title}</span><select id="product-select-title" style="display:none"></select></p>
+                    <p><strong>Description:</strong> <span id="description">${product.description}</span><input id="product-description-input" value="${product.description}" style="display:none"></p>
+                    <p><strong>Price:</strong> <span id="price">${product.price}</span><input id="product-price-input" value="${product.price}" style="display:none"></p>
+                `;
+                productDetail.innerHTML = productInfo;
+            })
+            .catch(error => console.error('Ошибка:', error));
+
+        function editProduct() {
+            const spans = document.querySelectorAll('span');
+            const inputs = document.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                input.style.display = "block"
+            });
+            spans.forEach(span => {
+                span.style.display = "none"
+            });
+
+            const categorySelect = document.getElementById('product-select-title');
+            if (categorySelect) {
+
+                fetch('/api/v1/category/list/')
+                    .then(response => response.json())
+                    .then(data => {
+                        const categories = data.results;
+                        categories.forEach(category => {
+                            const option = document.createElement('option');
+                            option.value = category.id;
+                            option.text = category.title;
+                            categorySelect.appendChild(option);
+                        });
+                        categorySelect.style.display = "block"
+                    })
+                    .catch(error => console.error('Ошибка:', error));
+            }
+
+            const editButton = document.getElementById('edit-button');
+            const deleteButton = document.getElementById('delete-button');
+            if (editButton) {
+                editButton.style.display = 'none';
+            }
+            if (deleteButton) {
+                deleteButton.style.display = 'none';
+            }
+
+            const saveButton = document.getElementById('save-button');
+            const cancelButton = document.getElementById('cancel-button');
+            if (saveButton) {
+                saveButton.style.display = 'block';
+            }
+            if (cancelButton) {
+                cancelButton.style.display = 'block';
+            }
+        }
+
+        function deleteProduct() {
+            fetch(apiUrl, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Продукт успешно удален');
+                    window.location.href = '/product_list/';
+                } else {
+                    console.error('Ошибка удаления продукта');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+        
+        function saveChanges() {
+            const titleInput = document.getElementById('product-title-input');
+            const categoryInput = document.getElementById('product-select-title');
+            const descriptionInput = document.getElementById('product-description-input');
+            const priceInput = document.getElementById('product-price-input');
+            const updatedProduct = {
+                title: titleInput.value,
+                category: categoryInput.value,
+                description: descriptionInput.value,
+                price: priceInput.value
+            };
+
+            fetch(apiUrl, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedProduct)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Изменения сохранены успешно');
+                    location.reload();
+                } else {
+                    console.error('Ошибка сохранения изменений');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+
+        function cancelEdit() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
