@@ -11,7 +11,7 @@ services:
       - ../back_media:/opt/services/store-backend/back_media/
     entrypoint: "sh /opt/services/store-backend/scripts/wsgi_server.sh"
     ports:
-      - "8222:82222"
+      - "8222:8222"
     networks:
       - main-network
       - nginx-network
