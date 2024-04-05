@@ -13,9 +13,9 @@ urlpatterns = [
     path("api/v1/", include("user.urls")),
     path("api/v1/", include("store.urls")),
     # html routes
-    path("product_list/", ProductListHtmlAPIView.as_view(), name="product-list-render"),
-    path("product_detail/<uuid:pk>/", ProductDetailHtmlView.as_view(), name="product-detail-render"),
-    path("product_create/", ProductCreateHtmlView.as_view(), name="product-create-html"),
+    path("html/product_list/", ProductListHtmlAPIView.as_view(), name="product-list-render"),
+    path("html/product_detail/<uuid:pk>/", ProductDetailHtmlView.as_view(), name="product-detail-render"),
+    path("html/product_create/", ProductCreateHtmlView.as_view(), name="product-create-html"),
 ]
 
 if settings.DEBUG:
