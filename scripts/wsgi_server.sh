@@ -9,4 +9,4 @@ python manage.py migrate
 echo "Collect static"
 python manage.py collectstatic --no-input
 echo "Run server"
-gunicorn --workers=5 --threads=2 --worker-class=gthread -b 0.0.0.0:8000 config.wsgi --reload
+gunicorn --workers=5 --threads=2 --worker-class=gthread -b 0.0.0.0:8222 config.wsgi --reload
